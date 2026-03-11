@@ -10,11 +10,22 @@ const uploadImage = asyncHandler(async (req: Request, res: Response) => {
       res.status(400);
       throw new Error('No file uploaded');
     }
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'products',
+    
+    // Cloudinary upload logic for memory-based files (Vercel compatible)
+    const result = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        { folder: 'products' },
+        (error, result) => {
+          if (result) resolve(result);
+          else reject(error);
+        }
+      );
+      uploadStream.end(req.file!.buffer);
     });
-    res.json({ imageUrl: result.secure_url });
+
+    res.json({ imageUrl: (result as any).secure_url });
   } catch (error) {
+    console.error('Upload Error:', error);
     res.status(500);
     throw new Error('Image upload failed');
   }
