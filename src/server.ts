@@ -12,11 +12,7 @@ import { notFound, errorHandler } from './middleware/errorMiddleware';
 
 dotenv.config();
 
-// Only connect to DB if we're not in a build environment
-if (process.env.NODE_ENV !== 'test') {
-    connectDB();
-}
-
+// Global DB connection is now handled per-request via middleware for Serverless
 const app = express();
 app.use(cors({
     origin: [
@@ -29,6 +25,16 @@ app.use(cors({
 app.use(express.json());
 app.use(cookie_parser());
 
+// Ensure DB is connected before handling any API requests
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+        next();
+    } catch (err) {
+        res.status(500).json({ message: 'Database connection failed. Please check Vercel MONGO_URI and IP Whitelist.' });
+    }
+});
+
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
@@ -39,9 +45,17 @@ app.get('/', (req, res) => {
     res.send('PosterSensei API is running...');
 });
 
-// Health check for Vercel
+// Diagnostic Health check for Vercel
 app.get('/api/health', (req, res) => {
-    res.status(200).json({ status: 'ok', message: 'API is healthy' });
+    const hasMongoURI = !!process.env.MONGO_URI;
+    res.status(200).json({ 
+        status: 'ok', 
+        message: 'API is healthy',
+        diagnostics: {
+            hasMongoURI: hasMongoURI,
+            dbState: require('mongoose').connection.readyState
+        }
+    });
 });
 
 app.use(notFound);
