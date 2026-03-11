@@ -10,6 +10,8 @@ import couponRoutes from './routes/couponRoutes';
 import cookie_parser from 'cookie-parser';
 import { notFound, errorHandler } from './middleware/errorMiddleware';
 
+dotenv.config();
+
 // Only connect to DB if we're not in a build environment
 if (process.env.NODE_ENV !== 'test') {
     connectDB();
