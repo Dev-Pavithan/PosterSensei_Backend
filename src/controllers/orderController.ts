@@ -90,16 +90,59 @@ const cancelOrder = asyncHandler(async (req: any, res: Response) => {
 // @route   GET /api/orders/stats
 const getOrderStats = asyncHandler(async (_req: Request, res: Response) => {
     const totalOrders = await Order.countDocuments();
-    const totalRevenue = await Order.aggregate([
+    const totalRevenueResult = await Order.aggregate([
+        { $match: { status: { $ne: 'cancelled' } } },
         { $group: { _id: null, total: { $sum: '$totalPrice' } } }
-    ] as any);
+    ]);
+    const totalRevenue = totalRevenueResult[0]?.total || 0;
+
     const pendingOrders = await Order.countDocuments({ status: 'pending' });
     const deliveredOrders = await Order.countDocuments({ status: 'delivered' });
+
+    // Revenue by day (last 7 days)
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const revenueByDay = await Order.aggregate([
+        { $match: { createdAt: { $gte: sevenDaysAgo }, status: { $ne: 'cancelled' } } },
+        {
+            $group: {
+                _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+                revenue: { $sum: '$totalPrice' },
+                orders: { $sum: 1 }
+            }
+        },
+        { $sort: { _id: 1 } }
+    ]);
+
+    // Top Selling Products
+    const topProducts = await Order.aggregate([
+        { $unwind: '$orderItems' },
+        {
+            $group: {
+                _id: '$orderItems.product',
+                title: { $first: '$orderItems.title' },
+                image: { $first: '$orderItems.image' },
+                totalQty: { $sum: '$orderItems.qty' },
+                totalRevenue: { $sum: { $multiply: ['$orderItems.price', '$orderItems.qty'] } }
+            }
+        },
+        { $sort: { totalQty: -1 } },
+        { $limit: 5 }
+    ]);
+
+    // Status Distribution
+    const statusDistribution = await Order.aggregate([
+        { $group: { _id: '$status', count: { $sum: 1 } } }
+    ]);
+
     res.json({
         totalOrders,
-        totalRevenue: totalRevenue[0]?.total || 0,
+        totalRevenue,
         pendingOrders,
         deliveredOrders,
+        revenueByDay,
+        topProducts,
+        statusDistribution,
     });
 });
 
