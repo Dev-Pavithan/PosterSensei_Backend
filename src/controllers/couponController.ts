@@ -17,7 +17,7 @@ const validateCoupon = asyncHandler(async (req: Request, res: Response) => {
     }
 
     if (cartTotal < coupon.minPurchase) {
-        res.status(400); throw new Error(`Minimum purchase of ₹${coupon.minPurchase} required for this coupon`);
+        res.status(400); throw new Error(`Minimum purchase of LKR ${coupon.minPurchase} required for this coupon`);
     }
 
     res.json({
