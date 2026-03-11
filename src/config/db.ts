@@ -23,6 +23,7 @@ const connectDB = async () => {
         return conn;
     } catch (error: any) {
         console.error(`Error connecting to MongoDB: ${error.message}`);
+        throw error;
     }
 };
 
