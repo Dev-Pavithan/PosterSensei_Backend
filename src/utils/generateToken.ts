@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import { Response } from 'express';
 
 const generateToken = (res: Response, userId: string) => {
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET || 'fallback_secret', {
+    const token = jwt.sign({ userId }, 'supersecret_postersensei_jwt_key', {
         expiresIn: '30d',
     });
 

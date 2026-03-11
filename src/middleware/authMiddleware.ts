@@ -17,7 +17,7 @@ const protect = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
     if (token) {
         try {
-            const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
+            const decoded: any = jwt.verify(token, 'supersecret_postersensei_jwt_key');
             req.user = await User.findById(decoded.userId).select('-password');
             next();
         } catch (error) {
