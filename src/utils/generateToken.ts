@@ -8,8 +8,8 @@ const generateToken = (res: Response, userId: string) => {
 
     res.cookie('jwt', token, {
         httpOnly: true,
-        secure: true, // Must be true for sameSite: 'none'
-        sameSite: 'none',
+        secure: true, 
+        sameSite: 'lax',
         maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 };
