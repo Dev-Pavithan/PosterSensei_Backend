@@ -19,6 +19,9 @@ export interface IUser extends Document {
     phone: string;
     addresses: IAddress[];
     wishlist: mongoose.Types.ObjectId[];
+    resetPasswordCode?: string;
+    resetPasswordExpires?: Date;
+    pushSubscriptions?: any[];
     matchPassword(enteredPassword: string): Promise<boolean>;
 }
 
@@ -41,6 +44,9 @@ const userSchema = new Schema<IUser>(
         phone: { type: String, default: '' },
         addresses: [addressSchema],
         wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+        resetPasswordCode: { type: String },
+        resetPasswordExpires: { type: Date },
+        pushSubscriptions: { type: Array, default: [] },
     },
     { timestamps: true }
 );

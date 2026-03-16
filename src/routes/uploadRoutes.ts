@@ -8,5 +8,6 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.post('/', protect, admin, upload.single('image'), uploadImage);
+router.post('/profile', protect, upload.single('image'), uploadImage);
 
 export default router;

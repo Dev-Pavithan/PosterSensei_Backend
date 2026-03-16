@@ -7,6 +7,9 @@ import productRoutes from './routes/productRoutes';
 import uploadRoutes from './routes/uploadRoutes';
 import orderRoutes from './routes/orderRoutes';
 import couponRoutes from './routes/couponRoutes';
+import contactRoutes from './routes/contactRoutes';
+import pushRoutes from './routes/pushRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 import cookie_parser from 'cookie-parser';
 import { notFound, errorHandler } from './middleware/errorMiddleware';
 
@@ -41,6 +44,9 @@ app.use('/api/products', productRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/coupons', couponRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/push', pushRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.get('/', (req, res) => {
     res.send('PosterSensei API is running...');
