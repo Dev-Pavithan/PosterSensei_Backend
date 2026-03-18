@@ -5,26 +5,25 @@ export interface IReview {
     name: string;
     rating: number;
     comment: string;
+    orderId: mongoose.Types.ObjectId;
+    image?: string;
+    status: 'pending' | 'approved' | 'rejected';
 }
 
 export interface IProduct extends Document {
     title: string;
-    anime: string;
+    character: string;
     category: string;
-    tags: string[];
     price: number;
-    originalPrice: number;
     discount: number;
     imageUrl: string;
-    images: string[];
-    stock: number;
     sizes: string[];
     featured: boolean;
-    reviews: IReview[];
+    reviews: mongoose.Types.DocumentArray<IReview>;
     rating: number;
     numReviews: number;
     description: string;
-    seller: string;
+    orientation: string;
 }
 
 const reviewSchema = new Schema<IReview>(
@@ -33,6 +32,9 @@ const reviewSchema = new Schema<IReview>(
         name: { type: String, required: true },
         rating: { type: Number, required: true },
         comment: { type: String, required: true },
+        orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order', required: true },
+        image: { type: String },
+        status: { type: String, required: true, default: 'pending', enum: ['pending', 'approved', 'rejected'] },
     },
     { timestamps: true }
 );
@@ -40,19 +42,15 @@ const reviewSchema = new Schema<IReview>(
 const productSchema = new Schema<IProduct>(
     {
         title: { type: String, required: true },
-        anime: { type: String, required: true },
+        character: { type: String, required: true },
         category: { type: String, required: true, default: 'Posters' },
-        tags: [{ type: String }],
         price: { type: Number, required: true, default: 0 },
-        originalPrice: { type: Number, default: 0 },
         discount: { type: Number, default: 0 }, // percentage
         imageUrl: { type: String, required: true },
-        images: [{ type: String }],
-        stock: { type: Number, required: true, default: 0 },
         sizes: [{ type: String }],
         featured: { type: Boolean, default: false },
         description: { type: String, default: '' },
-        seller: { type: String, default: 'PosterSensei' },
+        orientation: { type: String, required: true, default: 'Portrait' },
         reviews: [reviewSchema],
         rating: { type: Number, default: 0 },
         numReviews: { type: Number, default: 0 },

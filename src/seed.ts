@@ -20,34 +20,30 @@ const checkDb = async () => {
                 {
                     title: 'Goku Ultra Instinct Poster',
                     price: 499,
-                    originalPrice: 799,
                     discount: 37,
-                    anime: 'Dragon Ball Super',
+                    character: 'Goku',
                     category: 'Posters',
                     imageUrl: 'https://images.unsplash.com/photo-1541562232579-512a21360020?w=800',
-                    stock: 50,
                     description: 'Premium Goku Ultra Instinct poster.',
                     rating: 4.8,
                     numReviews: 120,
                     featured: true,
-                    tags: ['goku', 'dragonball', 'ultra instinct'],
-                    sizes: ['A4', 'A3', 'A2']
+                    sizes: ['A4', 'A3', 'A2'],
+                    orientation: 'Portrait'
                 },
                 {
                     title: 'Naruto Sage Mode',
                     price: 399,
-                    originalPrice: 599,
                     discount: 33,
-                    anime: 'Naruto',
+                    character: 'Naruto',
                     category: 'Posters',
                     imageUrl: 'https://images.unsplash.com/photo-1578632738980-23053520f393?w=800',
-                    stock: 30,
                     description: 'Naruto Sage Mode high quality print.',
                     rating: 4.5,
                     numReviews: 85,
                     featured: true,
-                    tags: ['naruto', 'sage mode'],
-                    sizes: ['A4', 'A3']
+                    sizes: ['A4', 'A3'],
+                    orientation: 'Portrait'
                 }
             ]);
             console.log('Products seeded.');

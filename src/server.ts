@@ -10,6 +10,7 @@ import couponRoutes from './routes/couponRoutes';
 import contactRoutes from './routes/contactRoutes';
 import pushRoutes from './routes/pushRoutes';
 import notificationRoutes from './routes/notificationRoutes';
+import deliveryRoutes from './routes/deliveryRoutes'; // Added import for deliveryRoutes
 import cookie_parser from 'cookie-parser';
 import { notFound, errorHandler } from './middleware/errorMiddleware';
 
@@ -47,6 +48,7 @@ app.use('/api/coupons', couponRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/push', pushRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/delivery', deliveryRoutes); // Added usage for deliveryRoutes
 
 app.get('/', (req, res) => {
     res.send('PosterSensei API is running...');

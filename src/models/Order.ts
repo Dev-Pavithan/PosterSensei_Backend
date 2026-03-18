@@ -20,7 +20,7 @@ export interface IOrder extends Document {
     user: mongoose.Types.ObjectId;
     orderItems: IOrderItem[];
     shippingAddress: IShippingAddress;
-    deliveryMethod: 'post' | 'local_setup';
+    deliveryMethod: string;
     paymentMethod: string;
     totalPrice: number;
     discount: number;
@@ -53,7 +53,7 @@ const orderSchema = new Schema<IOrder>(
             postalCode: { type: String, required: true },
             country: { type: String, required: true },
         },
-        deliveryMethod: { type: String, required: true, default: 'post' },
+        deliveryMethod: { type: String, required: true },
         paymentMethod: { type: String, required: true, default: 'Cash on Delivery' },
         totalPrice: { type: Number, required: true, default: 0.0 },
         discount: { type: Number, default: 0 },
